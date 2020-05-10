@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <ios>
 #include <iostream>
 #include <fstream>
@@ -33,20 +34,37 @@ bool MemoryCard::checkData()
     return false;
   }
 
-  return checkFrame(data_.begin());
+  for (int frame = 0; frame < 16; frame++)
+  {
+    auto it = getFrame(0, frame);
+
+    if(frame == 0)
+    {
+      if(getUint32(it) != static_cast<uint32_t>(BlockType::Identity))
+      {
+        return false;
+      }
+    }
+    if(!checkFrame(it))
+    {
+      return false;
+    }
+  }
+
+  return true;
 }
 
-bool MemoryCard::checkFrame(DataContainer::iterator frame_it)
+bool MemoryCard::checkFrame(DataContainer::const_iterator frame_it)
 {
-  char checksum = 0;
+  uint8_t checksum = 0;
   auto checksum_it = std::next(frame_it, 127);
 
   for (auto it = frame_it; it != checksum_it; ++it)
   {
-    checksum ^= *it;
+    checksum ^= getUint8(it);
   }
 
-  return checksum == *checksum_it;
+  return checksum == getUint8(checksum_it);
 }
 
 }

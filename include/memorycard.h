@@ -15,6 +15,18 @@ class MemoryCard
   static constexpr int BLOCK_SIZE = NUM_FRAMES * FRAME_SIZE;
   static constexpr int CARD_SIZE = NUM_BLOCKS * BLOCK_SIZE;
 
+  enum class BlockType : uint32_t {
+    Initial = 81,
+    Medial,
+    Final,
+    Formatted = 160,
+    Deleted_Initial,
+    Deleted_Medial,
+    Deleted_Final,
+    Identity = 17229,
+    Reserved = 0xFFFFFFFF
+  };
+
 public:
   MemoryCard() = default;
 
@@ -37,7 +49,32 @@ private:
     return std::next(data_.begin(), i);
   }
 
-  bool checkFrame(DataContainer::iterator frame_it);
+  static inline uint8_t getUint8(DataContainer::const_iterator it)
+  {
+    return static_cast<uint8_t>(*it);
+  }
+
+  static inline uint16_t getUint16(DataContainer::const_iterator it)
+  {
+    uint16_t val = 0;
+    for(int i = 0; i < sizeof(uint16_t); i++)
+    {
+      val += static_cast<uint8_t>(*it++) << i * 8;
+    }
+    return val;
+  }
+
+  static inline uint32_t getUint32(DataContainer::const_iterator it)
+  {
+    uint32_t val = 0;
+    for(int i = 0; i < sizeof(uint32_t); i++)
+    {
+      val += static_cast<uint8_t>(*it++) << i * 8;
+    }
+    return val;
+  }
+
+  static bool checkFrame(DataContainer::const_iterator frame_it);
 
   DataContainer data_;
 };
