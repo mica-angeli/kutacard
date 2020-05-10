@@ -40,7 +40,7 @@ bool MemoryCard::checkData()
 
     if(frame == 0)
     {
-      if(getUint32(it) != static_cast<uint32_t>(BlockType::Identity))
+      if(getValue<uint32_t>(it) != static_cast<uint32_t>(BlockType::Identity))
       {
         return false;
       }
@@ -61,10 +61,10 @@ bool MemoryCard::checkFrame(DataContainer::const_iterator frame_it)
 
   for (auto it = frame_it; it != checksum_it; ++it)
   {
-    checksum ^= getUint8(it);
+    checksum ^= getValue<uint8_t>(it);
   }
 
-  return checksum == getUint8(checksum_it);
+  return checksum == getValue<uint8_t>(checksum_it);
 }
 
 }

@@ -49,25 +49,11 @@ private:
     return std::next(data_.begin(), i);
   }
 
-  static inline uint8_t getUint8(DataContainer::const_iterator it)
+  template<typename ValueT>
+  static inline ValueT getValue(DataContainer::const_iterator it)
   {
-    return static_cast<uint8_t>(*it);
-  }
-
-  static inline uint16_t getUint16(DataContainer::const_iterator it)
-  {
-    uint16_t val = 0;
-    for(int i = 0; i < sizeof(uint16_t); i++)
-    {
-      val += static_cast<uint8_t>(*it++) << i * 8;
-    }
-    return val;
-  }
-
-  static inline uint32_t getUint32(DataContainer::const_iterator it)
-  {
-    uint32_t val = 0;
-    for(int i = 0; i < sizeof(uint32_t); i++)
+    ValueT val = 0;
+    for(int i = 0; i < sizeof(ValueT); i++)
     {
       val += static_cast<uint8_t>(*it++) << i * 8;
     }
