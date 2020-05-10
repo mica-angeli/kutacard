@@ -1,5 +1,5 @@
-#ifndef MY_APP_MainFrame_H
-#define MY_APP_MainFrame_H
+#ifndef KUTACARD_MAIN_FRAME_H
+#define KUTACARD_MAIN_FRAME_H
 
 #include "memorycard.h"
 #include <wx/wx.h>
@@ -24,4 +24,4 @@ private:
 };
 
 }
-#endif //MY_APP_MainFrame_H
+#endif //KUTACARD_MAIN_FRAME_H

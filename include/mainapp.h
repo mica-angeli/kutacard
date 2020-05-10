@@ -1,5 +1,5 @@
-#ifndef MY_APP_MainApp_H
-#define MY_APP_MainApp_H
+#ifndef KUTACARD_MAIN_APP_H
+#define KUTACARD_MAIN_APP_H
 
 #include <wx/wx.h>
 
@@ -12,4 +12,4 @@ public:
 };
 
 }
-#endif //MY_APP_MainApp_H
+#endif //KUTACARD_MAIN_APP_H
