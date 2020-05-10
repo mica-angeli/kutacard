@@ -1,6 +1,7 @@
 #ifndef MY_APP_MYFRAME_H
 #define MY_APP_MYFRAME_H
 
+#include "memorycard.h"
 #include <wx/wx.h>
 
 class MyFrame : public wxFrame {
@@ -15,6 +16,8 @@ private:
   void OnOpen(wxCommandEvent &event);
 
   void OnAbout(wxCommandEvent &event);
+
+  kutacard::MemoryCard mem_card_;
 };
 
 #endif //MY_APP_MYFRAME_H

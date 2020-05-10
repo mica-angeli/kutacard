@@ -1,6 +1,11 @@
+#include <sstream>
+#include <string>
+#include <locale>
 #include "myframe.h"
 
-MyFrame::MyFrame() : wxFrame{nullptr, wxID_ANY, "Kutacard"}
+MyFrame::MyFrame() :
+  wxFrame{nullptr, wxID_ANY, "Kutacard"},
+  mem_card_{}
 {
   auto *menuFile = new wxMenu;
   menuFile->Append(wxID_OPEN);
@@ -38,7 +43,13 @@ void MyFrame::OnOpen(wxCommandEvent &event)
 
   if (openFileDialog.ShowModal() != wxID_CANCEL)
   {
-    wxLogMessage("You opened a file!");
+    const std::string path = openFileDialog.GetPath().ToStdString();
+    mem_card_.loadFile(path);
+
+    std::ostringstream log_oss;
+    log_oss.imbue(std::locale(""));
+    log_oss << "Loaded memory card of size " << std::fixed << mem_card_.size() << " bytes";
+    wxLogMessage(wxString(log_oss.str()));
   }
 }
 
