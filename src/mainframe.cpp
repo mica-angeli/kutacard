@@ -1,9 +1,12 @@
 #include <sstream>
 #include <string>
 #include <locale>
-#include "myframe.h"
+#include "mainframe.h"
 
-MyFrame::MyFrame() :
+namespace kutacard
+{
+
+MainFrame::MainFrame() :
   wxFrame{nullptr, wxID_ANY, "Kutacard"},
   mem_card_{}
 {
@@ -26,13 +29,13 @@ MyFrame::MyFrame() :
   SetStatusText("");
 
   // Connect event handlers
-  Bind(wxEVT_MENU, &MyFrame::OnOpen, this, wxID_OPEN);
-  Bind(wxEVT_MENU, &MyFrame::OnAbout, this, wxID_ABOUT);
+  Bind(wxEVT_MENU, &MainFrame::OnOpen, this, wxID_OPEN);
+  Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
   Bind(
       wxEVT_MENU, [this](wxCommandEvent &) { Close(true); }, wxID_EXIT);
 }
 
-void MyFrame::OnOpen(wxCommandEvent &event)
+void MainFrame::OnOpen(wxCommandEvent &event)
 {
   wxFileDialog openFileDialog(this,
                               _("Open memory card file"),
@@ -53,7 +56,9 @@ void MyFrame::OnOpen(wxCommandEvent &event)
   }
 }
 
-void MyFrame::OnAbout(wxCommandEvent &event)
+void MainFrame::OnAbout(wxCommandEvent &event)
 {
   wxMessageBox("https://github.com/rangeli/kutacard", "Kutacard v0.0.0", wxOK | wxICON_INFORMATION);
+}
+
 }
