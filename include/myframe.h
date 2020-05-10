@@ -9,10 +9,10 @@ public:
 
 private:
   enum {
-    ID_Hello = 1
+    ID_Open = 1
   };
 
-  void OnHello(wxCommandEvent &event);
+  void OnOpen(wxCommandEvent &event);
 
   void OnAbout(wxCommandEvent &event);
 };
