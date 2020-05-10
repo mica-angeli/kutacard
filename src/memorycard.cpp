@@ -38,9 +38,12 @@ bool MemoryCard::checkData()
   {
     auto it = getFrame(0, frame);
 
+    DirectoryFrame dir_frame(it);
+    std::cout << dir_frame.license_code << ", " << dir_frame.save_code << std::endl;
+
     if(frame == 0)
     {
-      if(getValue<uint32_t>(it) != static_cast<uint32_t>(BlockType::Identity))
+      if(dir_frame.block_type != BlockType::Identity)
       {
         return false;
       }
