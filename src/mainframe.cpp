@@ -49,10 +49,13 @@ void MainFrame::OnOpen(wxCommandEvent &event)
     const std::string path = openFileDialog.GetPath().ToStdString();
     mem_card_.loadFile(path);
 
-    std::ostringstream log_oss;
-    log_oss.imbue(std::locale(""));
-    log_oss << "Loaded memory card of size " << std::fixed << mem_card_.size() << " bytes";
-    wxLogMessage(wxString(log_oss.str()));
+    if (mem_card_.checkData())
+    {
+      std::ostringstream log_oss;
+      log_oss.imbue(std::locale(""));
+      log_oss << "Successfully loaded memory card of size " << std::fixed << mem_card_.size() << " bytes";
+      wxLogMessage(wxString(log_oss.str()));
+    }
   }
 }
 
