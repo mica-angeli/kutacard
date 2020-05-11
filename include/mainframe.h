@@ -2,6 +2,7 @@
 #define KUTACARD_MAIN_FRAME_H
 
 #include "memorycard.h"
+#include <string>
 #include <wx/wx.h>
 
 namespace kutacard
@@ -19,6 +20,8 @@ private:
   void OnOpen(wxCommandEvent &event);
 
   void OnAbout(wxCommandEvent &event);
+
+  void openMemoryCard(const std::string& path);
 
   MemoryCard mem_card_;
 };

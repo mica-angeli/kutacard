@@ -33,6 +33,9 @@ MainFrame::MainFrame() :
   Bind(wxEVT_MENU, &MainFrame::OnAbout, this, wxID_ABOUT);
   Bind(
       wxEVT_MENU, [this](wxCommandEvent &) { Close(true); }, wxID_EXIT);
+
+  // TODO: Remove this.  Only for debug!
+  openMemoryCard("/Users/ricardo/Documents/castlevania.mcr");
 }
 
 void MainFrame::OnOpen(wxCommandEvent &event)
@@ -47,15 +50,20 @@ void MainFrame::OnOpen(wxCommandEvent &event)
   if (openFileDialog.ShowModal() != wxID_CANCEL)
   {
     const std::string path = openFileDialog.GetPath().ToStdString();
-    mem_card_.loadFile(path);
+    openMemoryCard(path);
+  }
+}
 
-    if (mem_card_.checkData())
-    {
-      std::ostringstream log_oss;
-      log_oss.imbue(std::locale(""));
-      log_oss << "Successfully loaded memory card of size " << std::fixed << mem_card_.size() << " bytes";
-      wxLogMessage(wxString(log_oss.str()));
-    }
+void MainFrame::openMemoryCard(const std::string &path)
+{
+  mem_card_.loadFile(path);
+
+  if (mem_card_.checkData())
+  {
+    std::ostringstream log_oss;
+    log_oss.imbue(std::locale(""));
+    log_oss << "Successfully loaded memory card of size " << std::fixed << mem_card_.size() << " bytes";
+    wxLogMessage(wxString(log_oss.str()));
   }
 }
 
