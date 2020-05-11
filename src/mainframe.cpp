@@ -46,7 +46,7 @@ MainFrame::MainFrame() :
       wxEVT_MENU, [this](wxCommandEvent &) { Close(true); }, wxID_EXIT);
 
   // TODO: Remove this.  Only for debug!
-  openMemoryCard("/Users/ricardo/Documents/castlevania.mcr");
+  openMemoryCard("/Users/ricardo/Documents/original.mcr");
 }
 
 void MainFrame::OnOpen(wxCommandEvent &event)
@@ -89,10 +89,10 @@ void MainFrame::openMemoryCard(const std::string &path)
     switch(dir_frame.block_type)
     {
       case BlockType::Initial:
-        block_type = "INITIAL";
+        block_type = "INIT";
         break;
       case BlockType::Identity:
-        block_type = "IDENTITY";
+        block_type = "IDENT";
         break;
       case BlockType::Medial:
         block_type = "MEDIAL";
@@ -101,10 +101,10 @@ void MainFrame::openMemoryCard(const std::string &path)
         block_type = "FINAL";
         break;
       case BlockType::Formatted:
-        block_type = "FORMATTED";
+        block_type = "FORMAT";
         break;
       case BlockType::Reserved:
-        block_type = "RESERVED";
+        block_type = "RESRVD";
         break;
       case BlockType::Deleted_Initial:
       case BlockType::Deleted_Medial:
