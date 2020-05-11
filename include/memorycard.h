@@ -15,24 +15,6 @@ class MemoryCard
   static constexpr int BLOCK_SIZE = NUM_FRAMES * FRAME_SIZE;
   static constexpr int CARD_SIZE = NUM_BLOCKS * BLOCK_SIZE;
 
-  enum class BlockType : uint32_t {
-    Initial = 81,
-    Medial,
-    Final,
-    Formatted = 160,
-    Deleted_Initial,
-    Deleted_Medial,
-    Deleted_Final,
-    Identity = 17229,
-    Reserved = 0xFFFFFFFF
-  };
-
-  enum class TerritoryCode: uint16_t {
-    American = 0x4142,
-    European = 0x4542,
-    Japanese = 0x4942
-  };
-
 public:
   MemoryCard() = default;
 
@@ -44,19 +26,39 @@ public:
 
   bool checkData();
 
-private:
+
   using DataContainer = std::vector<char>;
 
   struct DirectoryFrame
   {
     DirectoryFrame() = default;
 
-    DirectoryFrame(DataContainer::const_iterator frame_it) { load(frame_it); };
+    DirectoryFrame(DataContainer::const_iterator frame_it) :
+      DirectoryFrame{}
+    {
+      load(frame_it);
+    };
 
-    BlockType block_type;
+    enum class BlockType : uint32_t {
+      Initial = 81,
+      Medial,
+      Final,
+      Formatted = 160,
+      Deleted_Initial,
+      Deleted_Medial,
+      Deleted_Final,
+      Identity = 17229,
+      Reserved = 0xFFFFFFFF
+    } block_type;
+
+    enum class TerritoryCode: uint16_t {
+      American = 0x4142,
+      European = 0x4542,
+      Japanese = 0x4942
+    } territory;
+
     uint32_t save_size;
     uint16_t next_block;
-    TerritoryCode territory;
     std::string license_code;
     std::string save_code;
 
@@ -96,6 +98,8 @@ private:
     }
   };
 
+  std::vector<DirectoryFrame> dir_frames_;
+private:
   inline bool checkSize() { return data_.size() == CARD_SIZE; };
 
   inline DataContainer::iterator getFrame(int block, int frame, int byte = 0)

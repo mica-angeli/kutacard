@@ -3,6 +3,7 @@
 
 #include "memorycard.h"
 #include <string>
+#include <wx/listctrl.h>
 #include <wx/wx.h>
 
 namespace kutacard
@@ -24,6 +25,7 @@ private:
   void openMemoryCard(const std::string& path);
 
   MemoryCard mem_card_;
+  wxListView* mem_card_lv_;
 };
 
 }

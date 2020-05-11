@@ -10,9 +10,9 @@ MainFrame::MainFrame() :
   wxFrame{nullptr, wxID_ANY, "Kutacard"},
   mem_card_{}
 {
+  // Add menus
   auto *menuFile = new wxMenu;
   menuFile->Append(wxID_OPEN);
-  // menuFile->Append(ID_Open, "&Open...\tCtrl-O", "Open memory card file");
   menuFile->AppendSeparator();
   menuFile->Append(wxID_EXIT);
 
@@ -25,8 +25,19 @@ MainFrame::MainFrame() :
 
   SetMenuBar(menuBar);
 
+  // Add status bar
   CreateStatusBar();
   SetStatusText("");
+
+  // Add widgets in window
+  mem_card_lv_ = new wxListView(this);
+  mem_card_lv_->AppendColumn("Block #");
+  mem_card_lv_->AppendColumn("Block Type");
+  mem_card_lv_->AppendColumn("Region");
+  mem_card_lv_->AppendColumn("Title");
+  mem_card_lv_->AppendColumn("Product Code");
+  mem_card_lv_->AppendColumn("Identifier");
+
 
   // Connect event handlers
   Bind(wxEVT_MENU, &MainFrame::OnOpen, this, wxID_OPEN);
@@ -58,12 +69,74 @@ void MainFrame::openMemoryCard(const std::string &path)
 {
   mem_card_.loadFile(path);
 
-  if (mem_card_.checkData())
+  if (!mem_card_.checkData()) {
+    return;
+  }
+
+  std::ostringstream log_oss;
+  log_oss.imbue(std::locale(""));
+  log_oss << "Successfully loaded memory card of size " << std::fixed << mem_card_.size() << " bytes";
+  wxLogMessage(wxString(log_oss.str()));
+
+  for(int i = 0; i < mem_card_.dir_frames_.size(); i++)
   {
-    std::ostringstream log_oss;
-    log_oss.imbue(std::locale(""));
-    log_oss << "Successfully loaded memory card of size " << std::fixed << mem_card_.size() << " bytes";
-    wxLogMessage(wxString(log_oss.str()));
+    using BlockType = MemoryCard::DirectoryFrame::BlockType;
+    using TerritoryCode = MemoryCard::DirectoryFrame::TerritoryCode;
+
+    const auto& dir_frame = mem_card_.dir_frames_[i];
+
+    std::string block_type;
+    switch(dir_frame.block_type)
+    {
+      case BlockType::Initial:
+        block_type = "INITIAL";
+        break;
+      case BlockType::Identity:
+        block_type = "IDENTITY";
+        break;
+      case BlockType::Medial:
+        block_type = "MEDIAL";
+        break;
+      case BlockType::Final:
+        block_type = "FINAL";
+        break;
+      case BlockType::Formatted:
+        block_type = "FORMATTED";
+        break;
+      case BlockType::Reserved:
+        block_type = "RESERVED";
+        break;
+      case BlockType::Deleted_Initial:
+      case BlockType::Deleted_Medial:
+      case BlockType::Deleted_Final:
+        block_type = "DELETED";
+        break;
+    }
+
+    std::string region;
+    switch(dir_frame.territory)
+    {
+      case TerritoryCode::American:
+        region = "US";
+        break;
+
+      case TerritoryCode::European:
+        region = "EU";
+        break;
+
+      case TerritoryCode::Japanese:
+        region = "JP";
+        break;
+    }
+
+    int col = 0;
+    mem_card_lv_->InsertItem(i, "");
+    mem_card_lv_->SetItem(i, col++, std::to_string(i));
+    mem_card_lv_->SetItem(i, col++, block_type);
+    mem_card_lv_->SetItem(i, col++, region);
+    mem_card_lv_->SetItem(i, col++, "");
+    mem_card_lv_->SetItem(i, col++, dir_frame.license_code);
+    mem_card_lv_->SetItem(i, col++, dir_frame.save_code);
   }
 }
 
