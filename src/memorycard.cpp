@@ -2,6 +2,7 @@
 #include <ios>
 #include <iostream>
 #include <fstream>
+#include "shiftjis.h"
 #include "memorycard.h"
 
 namespace kutacard
@@ -69,4 +70,15 @@ bool MemoryCard::checkFrame(DataContainer::const_iterator frame_it)
   return checksum == getValue<uint8_t>(checksum_it);
 }
 
+  std::string MemoryCard::getSaveTitle(int block)
+  {
+    if (block == 0)
+    {
+      return "";
+    }
+
+    auto title_it = getFrame(block, 0, 4);
+    std::string title(&*title_it);
+    return shiftjis::toAscii(title);
+  }
 }

@@ -134,7 +134,7 @@ void MainFrame::openMemoryCard(const std::string &path)
     mem_card_lv_->SetItem(i, col++, std::to_string(i));
     mem_card_lv_->SetItem(i, col++, block_type);
     mem_card_lv_->SetItem(i, col++, region);
-    mem_card_lv_->SetItem(i, col++, "");
+    mem_card_lv_->SetItem(i, col++, mem_card_.getSaveTitle(i));
     mem_card_lv_->SetItem(i, col++, dir_frame.license_code);
     mem_card_lv_->SetItem(i, col++, dir_frame.save_code);
   }

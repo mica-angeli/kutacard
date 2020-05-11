@@ -26,6 +26,7 @@ public:
 
   bool checkData();
 
+  std::string getSaveTitle(int block);
 
   using DataContainer = std::vector<char>;
 
