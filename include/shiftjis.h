@@ -78,10 +78,6 @@ namespace shiftjis
       {
         oss << Utf8ConversionTable.at(c);
       }
-      else
-      {
-        throw std::runtime_error("Unable to convert Shift-JIS character to UTF-8");
-      }
     }
 
     return oss.str();

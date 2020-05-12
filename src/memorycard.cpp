@@ -14,6 +14,7 @@ void MemoryCard::loadFile(const std::string& path)
   const auto size = file.tellg();
   file.seekg(0, std::ios::beg);
 
+  data_.clear();
   data_.resize(size);
   file.read(data_.data(), size);
 }

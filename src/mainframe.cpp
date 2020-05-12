@@ -78,6 +78,7 @@ void MainFrame::openMemoryCard(const std::string &path)
   log_oss << "Successfully loaded memory card of size " << std::fixed << mem_card_.size() << " bytes";
   wxLogMessage(wxString(log_oss.str()));
 
+  mem_card_lv_->DeleteAllItems();
   for(int i = 0; i < mem_card_.dir_frames_.size(); i++)
   {
     using BlockType = MemoryCard::DirectoryFrame::BlockType;
