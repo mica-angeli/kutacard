@@ -79,6 +79,6 @@ bool MemoryCard::checkFrame(DataContainer::const_iterator frame_it)
 
     auto title_it = getFrame(block, 0, 4);
     std::string title(&*title_it);
-    return shiftjis::toAscii(title);
+    return shiftjis::toUtf8(title);
   }
 }
