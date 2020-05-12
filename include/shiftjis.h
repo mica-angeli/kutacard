@@ -1,9 +1,11 @@
-#ifndef KUTACARD_SHIFTJIS_H
-#define KUTACARD_SHIFTJIS_H
+#ifndef SHIFTJIS_SHIFTJIS_H
+#define SHIFTJIS_SHIFTJIS_H
 
 #include <sstream>
 #include <string>
 #include <unordered_map>
+
+#include "shiftjis_table.h"
 
 namespace shiftjis
 {
@@ -64,6 +66,26 @@ namespace shiftjis
 
     return oss.str();
   }
+
+  std::string toUtf8(const std::string& input)
+  {
+    std::ostringstream oss;
+    for(auto it = input.begin(); it != input.end() and std::next(it) != input.end(); it += 2)
+    {
+      const uint16_t c = (static_cast<uint8_t>(*it) << 8) + static_cast<uint8_t>(*std::next(it));
+      
+      if(Utf8ConversionTable.find(c) != Utf8ConversionTable.end())
+      {
+        oss << Utf8ConversionTable.at(c);
+      }
+      else
+      {
+        throw std::runtime_error("Unable to convert Shift-JIS character to UTF-8");
+      }
+    }
+
+    return oss.str();
+  }
 }
 
-#endif //KUTACARD_SHIFTJIS_H
+#endif //SHIFTJIS_SHIFTJIS_H
