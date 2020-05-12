@@ -7,7 +7,7 @@
 
 namespace shiftjis
 {
-  std::unordered_map<uint16_t, char> generateConversionTable()
+  static std::unordered_map<uint16_t, char> generateConversionTable()
   {
     std::unordered_map<uint16_t, char> map;
 
@@ -22,7 +22,24 @@ namespace shiftjis
     // Lowercase letters
     for (uint16_t c = 0x8281; c <= 0x829a; c++)
       map[c] = char(c - 0x8281 + 0x61);
-
+    
+    // Punctuation
+    map[0x8142] = ',';
+    map[0x8143] = '.';
+    map[0x8145] = ':';
+    map[0x8146] = ';';
+    map[0x8147] = '?';
+    map[0x8148] = '!';
+    map[0x814f] = '^';
+    map[0x8151] = '_';
+    map[0x815e] = '/';
+    map[0x815f] = '\\';
+    map[0x8160] = '~';
+    map[0x8162] = '|';
+    map[0x8169] = '(';
+    map[0x816a] = ')';
+    map[0x816d] = '[';
+    map[0x816e] = ']';
     return map;
   }
 
