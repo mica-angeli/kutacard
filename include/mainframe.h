@@ -24,7 +24,7 @@ private:
 
   void openMemoryCard(const std::string& path);
 
-  MemoryCard mem_card_;
+  ps1::MemoryCard mem_card_;
   wxListView* mem_card_lv_;
 };
 

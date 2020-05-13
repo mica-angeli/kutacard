@@ -81,8 +81,8 @@ void MainFrame::openMemoryCard(const std::string &path)
   mem_card_lv_->DeleteAllItems();
   for(int i = 0; i < mem_card_.dir_frames_.size(); i++)
   {
-    using BlockType = MemoryCard::DirectoryFrame::BlockType;
-    using TerritoryCode = MemoryCard::DirectoryFrame::TerritoryCode;
+    using BlockType = ps1::MemoryCard::DirectoryFrame::BlockType;
+    using TerritoryCode = ps1::MemoryCard::DirectoryFrame::TerritoryCode;
 
     const auto& dir_frame = mem_card_.dir_frames_[i];
 

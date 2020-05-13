@@ -1,10 +1,10 @@
-#ifndef KUTACARD_MEMORY_CARD_H
-#define KUTACARD_MEMORY_CARD_H
+#ifndef PS1_MEMORY_CARD_H
+#define PS1_MEMORY_CARD_H
 
 #include <string>
 #include <vector>
 
-namespace kutacard
+namespace ps1
 {
 
 class MemoryCard
@@ -127,4 +127,4 @@ private:
 
 }
 
-#endif // KUTACARD_MEMORY_CARD_H
+#endif // PS1_MEMORY_CARD_H

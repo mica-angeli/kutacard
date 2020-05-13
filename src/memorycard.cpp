@@ -5,7 +5,7 @@
 #include "shiftjis.h"
 #include "memorycard.h"
 
-namespace kutacard
+namespace ps1
 {
 
 void MemoryCard::loadFile(const std::string& path)
