@@ -40,11 +40,11 @@ bool MemoryCard::checkData()
   {
     auto it = getFrame(0, frame);
 
-    dir_frames_.emplace_back(it);
+    dir_frames_.emplace_back(DataContainer(it, std::next(it, FRAME_SIZE)));
 
     if(frame == 0)
     {
-      if(dir_frames_.back().block_type != DirectoryFrame::BlockType::Identity)
+      if(dir_frames_.back().getBlockType() != DirectoryFrame::BlockType::Identity)
       {
         return false;
       }

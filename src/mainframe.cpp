@@ -79,15 +79,16 @@ void MainFrame::openMemoryCard(const std::string &path)
   wxLogMessage(wxString(log_oss.str()));
 
   mem_card_lv_->DeleteAllItems();
-  for(int i = 0; i < mem_card_.dir_frames_.size(); i++)
-  {
-    using BlockType = ps1::MemoryCard::DirectoryFrame::BlockType;
-    using TerritoryCode = ps1::MemoryCard::DirectoryFrame::TerritoryCode;
 
-    const auto& dir_frame = mem_card_.dir_frames_[i];
+  for(int i = 0; i < mem_card_.getDirectoryFrames().size(); i++)
+  {
+    using BlockType = ps1::DirectoryFrame::BlockType;
+    using Region = ps1::DirectoryFrame::Region;
+
+    const auto& dir_frame = mem_card_.getDirectoryFrames()[i];
 
     std::string block_type;
-    switch(dir_frame.block_type)
+    switch(dir_frame.getBlockType())
     {
       case BlockType::Initial:
         block_type = "INIT";
@@ -115,17 +116,17 @@ void MainFrame::openMemoryCard(const std::string &path)
     }
 
     std::string region;
-    switch(dir_frame.territory)
+    switch(dir_frame.getRegion())
     {
-      case TerritoryCode::American:
+      case Region::American:
         region = "US";
         break;
 
-      case TerritoryCode::European:
+      case Region::European:
         region = "EU";
         break;
 
-      case TerritoryCode::Japanese:
+      case Region::Japanese:
         region = "JP";
         break;
     }
@@ -136,8 +137,8 @@ void MainFrame::openMemoryCard(const std::string &path)
     mem_card_lv_->SetItem(i, col++, block_type);
     mem_card_lv_->SetItem(i, col++, region);
     mem_card_lv_->SetItem(i, col++, mem_card_.getSaveTitle(i));
-    mem_card_lv_->SetItem(i, col++, dir_frame.license_code);
-    mem_card_lv_->SetItem(i, col++, dir_frame.save_code);
+    mem_card_lv_->SetItem(i, col++, dir_frame.getProductCode());
+    mem_card_lv_->SetItem(i, col++, dir_frame.getIdentifier());
   }
 }
 
