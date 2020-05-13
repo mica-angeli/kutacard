@@ -24,7 +24,7 @@ static inline ValueT getValue(DataContainer::const_iterator it)
   return val;
 }
 
-static inline int getIndex(int block, int frame, int byte = 0)
+static inline int getIndex(int block, int frame = 0, int byte = 0)
 {
   return block * BLOCK_SIZE + frame * FRAME_SIZE + byte;
 }
