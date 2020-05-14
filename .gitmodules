@@ -1,3 +1,6 @@
 [submodule "libs/wxWidgets"]
 	path = libs/wxWidgets
 	url = https://github.com/wxWidgets/wxWidgets.git
+[submodule "libs/argparse"]
+	path = libs/argparse
+	url = https://github.com/p-ranav/argparse.git
