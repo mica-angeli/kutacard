@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <string>
 #include <argparse.hpp>
@@ -14,6 +15,10 @@ bool list(const std::string& path)
     return false;
   }
 
+  // Print header
+  std::cout << "\033[1m #   Type Region   Product ID    Save ID Title\033[0m" << std::endl; 
+
+  // Process blocks in memory card
   for(int i = 0; i < mem_card.getDirectoryFrames().size(); i++)
   {
     using BlockType = ps1::DirectoryFrame::BlockType;
@@ -66,12 +71,12 @@ bool list(const std::string& path)
     }
 
     std::ostringstream oss;
-    oss << std::to_string(i) << " ";
-    oss << block_type << " ";
-    oss << region << " ";
+    oss << std::setw(2) << i << " ";
+    oss << std::setw(6) << block_type << " ";
+    oss << std::setw(6) << region << " ";
+    oss << std::setw(12) << dir_frame.getProductCode() << " ";
+    oss << std::setw(10) << dir_frame.getIdentifier() << " ";
     oss << mem_card.getSaveTitle(i) << " ";
-    oss << dir_frame.getProductCode() << " ";
-    oss << dir_frame.getIdentifier();
 
     std::cout << oss.str() << std::endl;
   }
@@ -82,11 +87,12 @@ bool list(const std::string& path)
 int main(int argc, char *argv[])
 {
   argparse::ArgumentParser parser("kutacli");
-
   parser.add_argument("command")
+    .help("Command to run.  Choices are <list>.")
     .action([](const std::string& v) {return v;});
-  
+
   parser.add_argument("file")
+    .help("Memory card file to process.  Must have *.mcr extension")
     .action([](const std::string& v) {return v;});
   
   parser.parse_args(argc, argv);
