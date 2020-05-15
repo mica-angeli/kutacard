@@ -70,6 +70,10 @@ public:
     return type == BlockType::Initial || type == BlockType::Medial || type == BlockType::Final;
   }
 
+  inline std::size_t size() const { return data_.size(); };
+
+  virtual bool checkData() const=0;
+
   virtual int getBlocks() const=0;
 
 protected:
@@ -92,7 +96,12 @@ protected:
     return val;
   }
 
-  static inline int getIndex(int block, int frame = 0, int byte = 0)
+  DataContainer::iterator getIt(int block, int frame = 0, int byte = 0)
+  {
+    return std::next(data_.begin(), getIndex(block, frame, byte));
+  }
+
+  virtual int getIndex(int block, int frame = 0, int byte = 0) const
   {
     return block * BLOCK_SIZE + frame * FRAME_SIZE + byte;
   }

@@ -43,7 +43,7 @@ bool MemoryCard::checkData() const
 
   for (int frame = 0; frame < 16; frame++)
   {
-    auto it = getFrame(0, frame);
+    auto it = std::next(data_.begin(), getIndex(0, frame));
 
     if(!checkFrame(it))
     {
@@ -67,10 +67,10 @@ bool MemoryCard::checkFrame(DataContainer::const_iterator frame_it)
   return checksum == getValue<uint8_t>(checksum_it);
 }
 
-  std::string MemoryCard::getSaveTitle(int block) const
-  {
-    auto title_it = getFrame(block, 0, 4);
-    std::string title(&*title_it);
-    return shiftjis::toUtf8(title);
-  }
+std::string MemoryCard::getSaveTitle(int block) const
+{
+  auto title_it = std::next(data_.begin(), getIndex(block, 0, 4));
+  std::string title(&*title_it);
+  return shiftjis::toUtf8(title);
+}
 }

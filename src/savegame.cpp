@@ -25,6 +25,11 @@ SaveGame::SaveGame(const DataContainer& mem_card_data, int block)
   data_.insert(data_.end(), save_it, std::next(save_it, save_size));
 }
 
+bool SaveGame::checkData() const
+{
+  return true;
+}
+
 void SaveGame::save(const std::string& path)
 {
   
