@@ -20,11 +20,9 @@ public:
 
   bool checkData() const override;
 
-  std::string getSaveTitle(int block) const;
-
   int getBlocks() const override
   {
-    return 16;
+    return NUM_BLOCKS;
   }
 
 private:

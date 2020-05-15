@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "shiftjis.h"
 namespace ps1
 {
 
@@ -62,6 +63,13 @@ public:
   {
     auto it = std::next(data_.begin(), block * FRAME_SIZE + 22);
     return std::string(&*it);
+  }
+
+  std::string getSaveTitle(int block) const
+  {
+    auto title_it = std::next(data_.begin(), getIndex(block, 0, 4));
+    std::string title(&*title_it);
+    return shiftjis::toUtf8(title);
   }
 
   inline bool isSaveGame(int block) const

@@ -2,7 +2,7 @@
 #include <ios>
 #include <iostream>
 #include <fstream>
-#include "shiftjis.h"
+
 #include "memorycard.h"
 
 namespace ps1
@@ -67,10 +67,4 @@ bool MemoryCard::checkFrame(DataContainer::const_iterator frame_it)
   return checksum == getValue<uint8_t>(checksum_it);
 }
 
-std::string MemoryCard::getSaveTitle(int block) const
-{
-  auto title_it = std::next(data_.begin(), getIndex(block, 0, 4));
-  std::string title(&*title_it);
-  return shiftjis::toUtf8(title);
-}
 }

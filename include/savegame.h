@@ -20,7 +20,6 @@ public:
 
   int getBlocks() const override { return blocks_; };
 
-  std::string getSaveTitle() const;
 private:
   int getIndex(int block, int frame = 0, int byte = 0) const override
   {

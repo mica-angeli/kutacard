@@ -35,11 +35,4 @@ void SaveGame::save(const std::string& path)
   
 }
 
-std::string SaveGame::getSaveTitle() const
-{
-  static constexpr int save_title_index = FRAME_SIZE + 4;
-  std::string title(&*std::next(data_.begin(), save_title_index));
-  return shiftjis::toUtf8(title);
-}
-
 }
