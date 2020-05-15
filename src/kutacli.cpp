@@ -4,6 +4,7 @@
 #include <string>
 #include <argparse.hpp>
 
+#include "savegame.h"
 #include "memorycard.h"
 
 bool list(const std::string& path)
@@ -16,7 +17,7 @@ bool list(const std::string& path)
   }
 
   // Print header
-  std::cout << "\033[1m #   Type Region   Product ID    Save ID Title\033[0m" << std::endl; 
+  std::cout << "\033[1m #   Type Region   Product ID    Save ID  Title\033[0m" << std::endl; 
 
   // Process blocks in memory card
   for(int i = 0; i < mem_card.getBlocks(); i++)
@@ -73,11 +74,53 @@ bool list(const std::string& path)
     oss << std::setw(6) << block_type << " ";
     oss << std::setw(6) << region << " ";
     oss << std::setw(12) << mem_card.getProductCode(i) << " ";
-    oss << std::setw(10) << mem_card.getIdentifier(i) << " ";
-    oss << mem_card.getSaveTitle(i) << " ";
+    oss << std::setw(10) << mem_card.getIdentifier(i) << "  ";
+    oss << mem_card.getSaveTitle(i);
 
     std::cout << oss.str() << std::endl;
   }
+
+  return true;
+}
+
+bool save(const std::string& path)
+{
+  ps1::SaveGame savegame(path);
+
+  if (!savegame.checkData()) {
+    return false;
+  }
+
+  // Print header
+  std::cout << "\033[1m # Region   Product ID    Save ID  Title\033[0m" << std::endl; 
+
+  // Process block in savegame
+  using Region = ps1::Filesystem::Region;
+
+  std::string region;
+  switch(savegame.getRegion(0))
+  {
+    case Region::American:
+      region = "US";
+      break;
+
+    case Region::European:
+      region = "EU";
+      break;
+
+    case Region::Japanese:
+      region = "JP";
+      break;
+  }
+
+  std::ostringstream oss;
+  oss << std::setw(2) << 0 << " ";
+  oss << std::setw(6) << region << " ";
+  oss << std::setw(12) << savegame.getProductCode(0) << " ";
+  oss << std::setw(10) << savegame.getIdentifier(0) << "  ";
+  oss << savegame.getSaveTitle(1);
+
+  std::cout << oss.str() << std::endl;
 
   return true;
 }
@@ -100,6 +143,11 @@ int main(int argc, char *argv[])
   {
     const std::string file = parser.get<std::string>("file");
     list(file);
+  }
+  else if(command == "save")
+  {
+    const std::string file = parser.get<std::string>("file");
+    save(file);
   }
 
   return 0;

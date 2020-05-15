@@ -1,4 +1,7 @@
 #include <cassert>
+#include <ios>
+#include <iostream>
+#include <fstream>
 
 #include "shiftjis.h"
 #include "savegame.h"
@@ -18,11 +21,21 @@ SaveGame::SaveGame(const DataContainer& mem_card_data, int block)
   // TODO: We should not assume the save size like this
   const int save_size = getSaveSize(0);
 
-  blocks_ = save_size / 8192;
-
   // Add save data
   auto save_it = std::next(mem_card_data.begin(), getIndex(block));
   data_.insert(data_.end(), save_it, std::next(save_it, save_size));
+}
+
+SaveGame::SaveGame(const std::string& path)
+{
+  // TODO: add RAW support
+  std::ifstream file(path, std::ios::binary | std::ios::ate);
+  const auto size = file.tellg();
+  file.seekg(0, std::ios::beg);
+
+  data_.clear();
+  data_.resize(size);
+  file.read(data_.data(), size);
 }
 
 bool SaveGame::checkData() const

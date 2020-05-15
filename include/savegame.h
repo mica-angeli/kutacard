@@ -14,11 +14,13 @@ class SaveGame : public Filesystem
 public:
   SaveGame(const DataContainer& card_data, int block);
 
-  bool checkData() const override;
+  SaveGame(const std::string& path);
 
   void save(const std::string& path);
 
-  int getBlocks() const override { return blocks_; };
+  bool checkData() const override;
+
+  int getBlocks() const override { return 1; };
 
 private:
   int getIndex(int block, int frame = 0, int byte = 0) const override
@@ -32,8 +34,6 @@ private:
       return (block - 1) * BLOCK_SIZE + (frame + 1) * FRAME_SIZE + byte;
     }
   }
-
-  int blocks_;
 };
 
 }

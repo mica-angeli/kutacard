@@ -26,5 +26,5 @@ set_target_properties(kutacard PROPERTIES
         MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/MacOSXBundleInfo.plist.in)
 target_link_libraries(kutacard net core base)
 
-add_executable(kutacli src/kutacli.cpp src/memorycard.cpp)
+add_executable(kutacli src/kutacli.cpp src/memorycard.cpp src/savegame.cpp)
 target_link_libraries(kutacli argparse)
