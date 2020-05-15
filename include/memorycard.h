@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "filesystem.h"
-#include "ps1common.h"
 
 namespace ps1
 {
