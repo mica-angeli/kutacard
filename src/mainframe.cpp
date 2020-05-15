@@ -80,15 +80,13 @@ void MainFrame::openMemoryCard(const std::string &path)
 
   mem_card_lv_->DeleteAllItems();
 
-  for(int i = 0; i < mem_card_.getDirectoryFrames().size(); i++)
+  for(int i = 0; i < mem_card_.getBlocks(); i++)
   {
-    using BlockType = ps1::DirectoryFrame::BlockType;
-    using Region = ps1::DirectoryFrame::Region;
-
-    const auto& dir_frame = mem_card_.getDirectoryFrames()[i];
+    using BlockType = ps1::Filesystem::BlockType;
+    using Region = ps1::Filesystem::Region;
 
     std::string block_type;
-    switch(dir_frame.getBlockType())
+    switch(mem_card_.getBlockType(i))
     {
       case BlockType::Initial:
         block_type = "INIT";
@@ -116,7 +114,7 @@ void MainFrame::openMemoryCard(const std::string &path)
     }
 
     std::string region;
-    switch(dir_frame.getRegion())
+    switch(mem_card_.getRegion(i))
     {
       case Region::American:
         region = "US";
@@ -137,8 +135,8 @@ void MainFrame::openMemoryCard(const std::string &path)
     mem_card_lv_->SetItem(i, col++, block_type);
     mem_card_lv_->SetItem(i, col++, region);
     mem_card_lv_->SetItem(i, col++, mem_card_.getSaveTitle(i));
-    mem_card_lv_->SetItem(i, col++, dir_frame.getProductCode());
-    mem_card_lv_->SetItem(i, col++, dir_frame.getIdentifier());
+    mem_card_lv_->SetItem(i, col++, mem_card_.getProductCode(i));
+    mem_card_lv_->SetItem(i, col++, mem_card_.getIdentifier(i));
   }
 }
 

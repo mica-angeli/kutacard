@@ -45,7 +45,7 @@ namespace shiftjis
     return map;
   }
 
-  std::string toAscii(const std::string& input)
+  static std::string toAscii(const std::string& input)
   {
     static const auto conversionTable = generateConversionTable();
 
@@ -67,7 +67,7 @@ namespace shiftjis
     return oss.str();
   }
 
-  std::string toUtf8(const std::string& input)
+  static std::string toUtf8(const std::string& input)
   {
     std::ostringstream oss;
     for(auto it = input.begin(); it != input.end() and std::next(it) != input.end(); it += 2)

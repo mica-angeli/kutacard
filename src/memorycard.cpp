@@ -19,7 +19,7 @@ void MemoryCard::loadFile(const std::string& path)
   file.read(data_.data(), size);
 }
 
-void MemoryCard::printData()
+void MemoryCard::printData() const
 {
   for (const auto& val : data_)
   {
@@ -29,9 +29,14 @@ void MemoryCard::printData()
   std::cout << std::endl;
 }
 
-bool MemoryCard::checkData()
+bool MemoryCard::checkData() const
 {
   if (!checkSize())
+  {
+    return false;
+  }
+
+  if (getBlockType(0) != BlockType::Identity)
   {
     return false;
   }
@@ -40,15 +45,6 @@ bool MemoryCard::checkData()
   {
     auto it = getFrame(0, frame);
 
-    dir_frames_.emplace_back(DataContainer(it, std::next(it, FRAME_SIZE)));
-
-    if(frame == 0)
-    {
-      if(dir_frames_.back().getBlockType() != DirectoryFrame::BlockType::Identity)
-      {
-        return false;
-      }
-    }
     if(!checkFrame(it))
     {
       return false;
@@ -71,13 +67,8 @@ bool MemoryCard::checkFrame(DataContainer::const_iterator frame_it)
   return checksum == getValue<uint8_t>(checksum_it);
 }
 
-  std::string MemoryCard::getSaveTitle(int block)
+  std::string MemoryCard::getSaveTitle(int block) const
   {
-    if (block == 0)
-    {
-      return "";
-    }
-
     auto title_it = getFrame(block, 0, 4);
     std::string title(&*title_it);
     return shiftjis::toUtf8(title);

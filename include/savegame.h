@@ -4,22 +4,24 @@
 #include <string>
 #include <vector>
 
-#include "directoryframe.h"
+#include "filesystem.h"
 #include "ps1common.h"
 
 namespace ps1
 {
 
-class SaveGame
+class SaveGame : public Filesystem
 {
 public:
   SaveGame(const DataContainer& card_data, int block);
 
   void save(const std::string& path);
 
+  int getBlocks() const override { return blocks_; };
+
+  std::string getSaveTitle() const;
 private:
-  DirectoryFrame dir_frame_;
-  DataContainer save_data_;
+  int blocks_;
 };
 
 }

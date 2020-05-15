@@ -19,15 +19,13 @@ bool list(const std::string& path)
   std::cout << "\033[1m #   Type Region   Product ID    Save ID Title\033[0m" << std::endl; 
 
   // Process blocks in memory card
-  for(int i = 0; i < mem_card.getDirectoryFrames().size(); i++)
+  for(int i = 0; i < mem_card.getBlocks(); i++)
   {
-    using BlockType = ps1::DirectoryFrame::BlockType;
-    using Region = ps1::DirectoryFrame::Region;
-
-    const auto& dir_frame = mem_card.getDirectoryFrames()[i];
+    using BlockType = ps1::Filesystem::BlockType;
+    using Region = ps1::Filesystem::Region;
 
     std::string block_type;
-    switch(dir_frame.getBlockType())
+    switch(mem_card.getBlockType(i))
     {
       case BlockType::Initial:
         block_type = "INIT";
@@ -55,7 +53,7 @@ bool list(const std::string& path)
     }
 
     std::string region;
-    switch(dir_frame.getRegion())
+    switch(mem_card.getRegion(i))
     {
       case Region::American:
         region = "US";
@@ -74,8 +72,8 @@ bool list(const std::string& path)
     oss << std::setw(2) << i << " ";
     oss << std::setw(6) << block_type << " ";
     oss << std::setw(6) << region << " ";
-    oss << std::setw(12) << dir_frame.getProductCode() << " ";
-    oss << std::setw(10) << dir_frame.getIdentifier() << " ";
+    oss << std::setw(12) << mem_card.getProductCode(i) << " ";
+    oss << std::setw(10) << mem_card.getIdentifier(i) << " ";
     oss << mem_card.getSaveTitle(i) << " ";
 
     std::cout << oss.str() << std::endl;
