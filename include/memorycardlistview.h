@@ -23,6 +23,13 @@ public:
                      const wxString &name = wxListCtrlNameStr);
 
   void update(const ps1::MemoryCard& mem_card);
+
+private:
+  using BlockType = ps1::Filesystem::BlockType;
+  using Region = ps1::Filesystem::Region;
+
+  static inline const std::unordered_map<Region, std::string> region_to_str = {
+    {Region::American, "US"}, {Region::European, "EU"}, {Region::Japanese, "JP"}};
 };
 
 }

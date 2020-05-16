@@ -1,3 +1,5 @@
+#include <unordered_map>
+
 #include "memorycardlistview.h"
 
 namespace kutacard
@@ -18,7 +20,6 @@ MemoryCardListView::MemoryCardListView(wxWindow *parent,
   wxListView{parent, winid, pos, size, style, validator, name}
 {
   AppendColumn("Block #");
-  AppendColumn("Block Type");
   AppendColumn("Region");
   AppendColumn("Title");
   AppendColumn("Product Code");
@@ -30,63 +31,49 @@ void MemoryCardListView::update(const ps1::MemoryCard& mem_card)
 {
   DeleteAllItems();
 
-  for(int i = 0; i < mem_card.getBlocks(); i++)
+  int item_i = 0;
+  for(int block = 1; block < mem_card.getBlocks(); block++)
   {
-    using BlockType = ps1::Filesystem::BlockType;
-    using Region = ps1::Filesystem::Region;
+    const std::string block_num = std::to_string(block);
+    std::string region;
+    std::string title;
+    std::string product_code;
+    std::string identifier;
 
-    std::string block_type;
-    switch(mem_card.getBlockType(i))
+    switch(mem_card.getBlockType(block))
     {
       case BlockType::Initial:
-        block_type = "INIT";
-        break;
-      case BlockType::Identity:
-        block_type = "IDENT";
+        title = mem_card.getSaveTitle(block);
+        region = region_to_str.at(mem_card.getRegion(block));
+        product_code = mem_card.getProductCode(block);
+        identifier = mem_card.getIdentifier(block);
         break;
       case BlockType::Medial:
-        block_type = "MEDIAL";
+        title = "Linked block (middle)";
         break;
       case BlockType::Final:
-        block_type = "FINAL";
+        title = "Linked block (final)";
         break;
       case BlockType::Formatted:
-        block_type = "FORMAT";
+        title = "Free block";
         break;
+      case BlockType::Identity:
       case BlockType::Reserved:
-        block_type = "RESRVD";
-        break;
       case BlockType::Deleted_Initial:
       case BlockType::Deleted_Medial:
       case BlockType::Deleted_Final:
-        block_type = "DELETED";
-        break;
-    }
-
-    std::string region;
-    switch(mem_card.getRegion(i))
-    {
-      case Region::American:
-        region = "US";
-        break;
-
-      case Region::European:
-        region = "EU";
-        break;
-
-      case Region::Japanese:
-        region = "JP";
+        title = "Unformatted block";
         break;
     }
 
     int col = 0;
-    InsertItem(i, "");
-    SetItem(i, col++, std::to_string(i));
-    SetItem(i, col++, block_type);
-    SetItem(i, col++, region);
-    SetItem(i, col++, mem_card.getSaveTitle(i));
-    SetItem(i, col++, mem_card.getProductCode(i));
-    SetItem(i, col++, mem_card.getIdentifier(i));
+    InsertItem(item_i, "");
+    SetItem(item_i, col++, block_num);
+    SetItem(item_i, col++, region);
+    SetItem(item_i, col++, title);
+    SetItem(item_i, col++, product_code);
+    SetItem(item_i, col++, identifier);
+    item_i++;
   }
 }
 
