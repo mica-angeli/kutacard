@@ -92,6 +92,7 @@ protected:
   static constexpr int FRAME_SIZE = 128;
   static constexpr int BLOCK_SIZE = NUM_FRAMES * FRAME_SIZE;
   static constexpr int CARD_SIZE = NUM_BLOCKS * BLOCK_SIZE;
+  static constexpr uint16_t NEXT_BLOCK_NONE = 0xffff;
 
   template<typename ValueT>
   static inline ValueT getValue(DataContainer::const_iterator it)
@@ -104,9 +105,32 @@ protected:
     return val;
   }
 
-  DataContainer::iterator getIt(int block, int frame = 0, int byte = 0)
+  template<typename ValueT>
+  static inline ValueT setValue(DataContainer::iterator it, ValueT val)
   {
-    return std::next(data_.begin(), getIndex(block, frame, byte));
+    for(int i = 0; i < sizeof(ValueT); i++)
+    {
+      *it++ = static_cast<uint8_t>((val & (0xFF << i * 8)) >> i * 8);
+    }
+    return val;
+  }
+
+  static uint8_t checksum(DataContainer::const_iterator begin, DataContainer::const_iterator end)
+  {
+    uint8_t checksum = 0;
+    // auto checksum_it = std::next(frame_it, 127);
+
+    for (auto it = begin; it != end; ++it)
+    {
+      checksum ^= getValue<uint8_t>(it);
+    }
+
+    return checksum;
+  }
+
+  static bool checkFrame(DataContainer::const_iterator frame_it)
+  {
+    return checksum(frame_it, std::next(frame_it, FRAME_SIZE)) == 0;
   }
 
   virtual int getIndex(int block, int frame = 0, int byte = 0) const

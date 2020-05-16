@@ -144,6 +144,13 @@ bool card2save(const std::string& path, int block)
   return true;
 }
 
+bool newCard()
+{
+  ps1::MemoryCard mem_card;
+  mem_card.save("card.mcr");
+  return true;
+}
+
 int main(int argc, char *argv[])
 {
   argparse::ArgumentParser parser("kutacli");
@@ -176,6 +183,10 @@ int main(int argc, char *argv[])
   else if(command == "card2save")
   {
     card2save(file, block);
+  }
+  else if(command == "new")
+  {
+    newCard();
   }
 
   return 0;

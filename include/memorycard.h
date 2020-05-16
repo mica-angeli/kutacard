@@ -14,7 +14,7 @@ class MemoryCard : public Filesystem
 {
 public:
   MemoryCard();
-  
+
   MemoryCard(const std::string& path);
 
   void printData() const;
@@ -28,10 +28,10 @@ public:
 
   SaveGame getSaveGame(int block) const;
 
+  void save(const std::string& path) const;
+
 private:
   inline bool checkSize() const { return data_.size() == CARD_SIZE; };
-
-  static bool checkFrame(DataContainer::const_iterator frame_it);
 };
 
 }

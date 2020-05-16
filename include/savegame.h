@@ -16,7 +16,7 @@ public:
 
   SaveGame(const std::string& path);
 
-  void save(const std::string& path);
+  void save(const std::string& path) const;
 
   bool checkData() const override;
 

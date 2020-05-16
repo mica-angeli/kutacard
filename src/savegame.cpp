@@ -46,7 +46,7 @@ bool SaveGame::checkData() const
   return true;
 }
 
-void SaveGame::save(const std::string& path)
+void SaveGame::save(const std::string& path) const
 {
   std::ofstream file(path, std::ios::binary | std::ios::out | std::ios::trunc);
   file.write(data_.data(), data_.size());
