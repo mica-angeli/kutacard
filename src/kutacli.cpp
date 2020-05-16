@@ -9,8 +9,7 @@
 
 bool list(const std::string& path)
 {
-  ps1::MemoryCard mem_card;
-  mem_card.loadFile(path);
+  ps1::MemoryCard mem_card(path);
 
   if (!mem_card.checkData()) {
     return false;
@@ -127,8 +126,7 @@ bool save(const std::string& path)
 
 bool card2save(const std::string& path, int block)
 {
-  ps1::MemoryCard mem_card;
-  mem_card.loadFile(path);
+  ps1::MemoryCard mem_card(path);
 
   if (!mem_card.checkData()) {
     return false;

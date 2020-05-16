@@ -13,9 +13,9 @@ namespace ps1
 class MemoryCard : public Filesystem
 {
 public:
-  MemoryCard() = default;
-
-  void loadFile(const std::string& path);
+  MemoryCard();
+  
+  MemoryCard(const std::string& path);
 
   void printData() const;
 

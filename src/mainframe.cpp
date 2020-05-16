@@ -8,7 +8,10 @@ namespace kutacard
 
 MainFrame::MainFrame() :
   wxFrame{nullptr, wxID_ANY, "Kutacard"},
-  mem_card_{}
+  current_card_{0},
+  cards_{},
+  save_buffer_{},
+  mem_card_lv_{}
 {
   // Add menus
   auto *menuFile = new wxMenu;
@@ -67,26 +70,35 @@ void MainFrame::OnOpen(wxCommandEvent &event)
 
 void MainFrame::openMemoryCard(const std::string &path)
 {
-  mem_card_.loadFile(path);
+  if(cards_.empty())
+  {
+    cards_.emplace_back(path);
+  }
+  else
+  {
+    cards_[current_card_] = ps1::MemoryCard(path);
+  }
+  
+  auto& mem_card = cards_[current_card_];
 
-  if (!mem_card_.checkData()) {
+  if (!mem_card.checkData()) {
     return;
   }
 
   std::ostringstream log_oss;
   log_oss.imbue(std::locale(""));
-  log_oss << "Successfully loaded memory card of size " << std::fixed << mem_card_.size() << " bytes";
+  log_oss << "Successfully loaded memory card of size " << std::fixed << mem_card.size() << " bytes";
   wxLogMessage(wxString(log_oss.str()));
 
   mem_card_lv_->DeleteAllItems();
 
-  for(int i = 0; i < mem_card_.getBlocks(); i++)
+  for(int i = 0; i < mem_card.getBlocks(); i++)
   {
     using BlockType = ps1::Filesystem::BlockType;
     using Region = ps1::Filesystem::Region;
 
     std::string block_type;
-    switch(mem_card_.getBlockType(i))
+    switch(mem_card.getBlockType(i))
     {
       case BlockType::Initial:
         block_type = "INIT";
@@ -114,7 +126,7 @@ void MainFrame::openMemoryCard(const std::string &path)
     }
 
     std::string region;
-    switch(mem_card_.getRegion(i))
+    switch(mem_card.getRegion(i))
     {
       case Region::American:
         region = "US";
@@ -134,9 +146,9 @@ void MainFrame::openMemoryCard(const std::string &path)
     mem_card_lv_->SetItem(i, col++, std::to_string(i));
     mem_card_lv_->SetItem(i, col++, block_type);
     mem_card_lv_->SetItem(i, col++, region);
-    mem_card_lv_->SetItem(i, col++, mem_card_.getSaveTitle(i));
-    mem_card_lv_->SetItem(i, col++, mem_card_.getProductCode(i));
-    mem_card_lv_->SetItem(i, col++, mem_card_.getIdentifier(i));
+    mem_card_lv_->SetItem(i, col++, mem_card.getSaveTitle(i));
+    mem_card_lv_->SetItem(i, col++, mem_card.getProductCode(i));
+    mem_card_lv_->SetItem(i, col++, mem_card.getIdentifier(i));
   }
 }
 

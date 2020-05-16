@@ -8,7 +8,12 @@
 namespace ps1
 {
 
-void MemoryCard::loadFile(const std::string& path)
+MemoryCard::MemoryCard()
+{
+
+}
+
+MemoryCard::MemoryCard(const std::string& path)
 {
   std::ifstream file(path, std::ios::binary | std::ios::ate);
   const auto size = file.tellg();
