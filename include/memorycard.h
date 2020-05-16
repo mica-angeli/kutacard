@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "filesystem.h"
+#include "savegame.h"
 
 namespace ps1
 {
@@ -24,6 +25,8 @@ public:
   {
     return NUM_BLOCKS;
   }
+
+  SaveGame getSaveGame(int block) const;
 
 private:
   inline bool checkSize() const { return data_.size() == CARD_SIZE; };

@@ -125,6 +125,27 @@ bool save(const std::string& path)
   return true;
 }
 
+bool card2save(const std::string& path, int block)
+{
+  ps1::MemoryCard mem_card;
+  mem_card.loadFile(path);
+
+  if (!mem_card.checkData()) {
+    return false;
+  }
+
+  auto save = mem_card.getSaveGame(block);
+  
+  if (!save.checkData()) {
+    return false;
+  }
+
+  // TODO: Provide output path argument
+  save.save("save.mcs");
+
+  return true;
+}
+
 int main(int argc, char *argv[])
 {
   argparse::ArgumentParser parser("kutacli");
@@ -136,18 +157,27 @@ int main(int argc, char *argv[])
     .help("Memory card file to process.  Must have *.mcr extension")
     .action([](const std::string& v) {return v;});
   
+  parser.add_argument("-b")
+    .default_value("1")
+    .help("Save block")
+    .action([](const std::string& v) {return std::stoi(v);});
+  
   parser.parse_args(argc, argv);
 
-  const std::string command = parser.get<std::string>("command");
+  const auto command = parser.get<std::string>("command");
+  const auto file = parser.get<std::string>("file");
+  const auto block = parser.get<int>("-b");
   if(command == "list")
   {
-    const std::string file = parser.get<std::string>("file");
     list(file);
   }
   else if(command == "save")
   {
-    const std::string file = parser.get<std::string>("file");
     save(file);
+  }
+  else if(command == "card2save")
+  {
+    card2save(file, block);
   }
 
   return 0;

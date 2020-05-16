@@ -13,7 +13,8 @@ SaveGame::SaveGame(const DataContainer& mem_card_data, int block)
   assert(block >= 0 and block <= 15);
 
   // Add directory frame data
-  auto dir_frame_it = std::next(mem_card_data.begin(), getIndex(0, block));
+  const int dir_frame_index = FRAME_SIZE * block;
+  auto dir_frame_it = std::next(mem_card_data.begin(), dir_frame_index);
   data_.insert(data_.end(), dir_frame_it, std::next(dir_frame_it, FRAME_SIZE));
 
   assert(getBlockType(0) == BlockType::Initial);
@@ -22,7 +23,8 @@ SaveGame::SaveGame(const DataContainer& mem_card_data, int block)
   const int save_size = getSaveSize(0);
 
   // Add save data
-  auto save_it = std::next(mem_card_data.begin(), getIndex(block));
+  const int save_index = block * BLOCK_SIZE;
+  auto save_it = std::next(mem_card_data.begin(), save_index);
   data_.insert(data_.end(), save_it, std::next(save_it, save_size));
 }
 
@@ -36,6 +38,7 @@ SaveGame::SaveGame(const std::string& path)
   data_.clear();
   data_.resize(size);
   file.read(data_.data(), size);
+  file.close();
 }
 
 bool SaveGame::checkData() const
@@ -45,7 +48,9 @@ bool SaveGame::checkData() const
 
 void SaveGame::save(const std::string& path)
 {
-  
+  std::ofstream file(path, std::ios::binary | std::ios::out | std::ios::trunc);
+  file.write(data_.data(), data_.size());
+  file.close();
 }
 
 }

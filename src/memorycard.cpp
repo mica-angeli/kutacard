@@ -67,4 +67,9 @@ bool MemoryCard::checkFrame(DataContainer::const_iterator frame_it)
   return checksum == getValue<uint8_t>(checksum_it);
 }
 
+SaveGame MemoryCard::getSaveGame(int block) const
+{
+  return SaveGame(data_, block);
+}
+
 }
