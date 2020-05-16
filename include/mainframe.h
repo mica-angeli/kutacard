@@ -5,9 +5,9 @@
 #include <memory>
 #include <vector>
 
-#include <wx/listctrl.h>
 #include <wx/wx.h>
 
+#include "memorycardlistview.h"
 #include "memorycard.h"
 #include "savegame.h"
 
@@ -36,7 +36,7 @@ private:
 
   std::unique_ptr<ps1::SaveGame> save_buffer_;
 
-  wxListView* mem_card_lv_;
+  MemoryCardListView* mem_card_lv_;
 };
 
 }

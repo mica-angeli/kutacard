@@ -33,14 +33,7 @@ MainFrame::MainFrame() :
   SetStatusText("");
 
   // Add widgets in window
-  mem_card_lv_ = new wxListView(this);
-  mem_card_lv_->AppendColumn("Block #");
-  mem_card_lv_->AppendColumn("Block Type");
-  mem_card_lv_->AppendColumn("Region");
-  mem_card_lv_->AppendColumn("Title");
-  mem_card_lv_->AppendColumn("Product Code");
-  mem_card_lv_->AppendColumn("Identifier");
-
+  mem_card_lv_ = new MemoryCardListView(this);
 
   // Connect event handlers
   Bind(wxEVT_MENU, &MainFrame::OnOpen, this, wxID_OPEN);
@@ -90,66 +83,7 @@ void MainFrame::openMemoryCard(const std::string &path)
   log_oss << "Successfully loaded memory card of size " << std::fixed << mem_card.size() << " bytes";
   wxLogMessage(wxString(log_oss.str()));
 
-  mem_card_lv_->DeleteAllItems();
-
-  for(int i = 0; i < mem_card.getBlocks(); i++)
-  {
-    using BlockType = ps1::Filesystem::BlockType;
-    using Region = ps1::Filesystem::Region;
-
-    std::string block_type;
-    switch(mem_card.getBlockType(i))
-    {
-      case BlockType::Initial:
-        block_type = "INIT";
-        break;
-      case BlockType::Identity:
-        block_type = "IDENT";
-        break;
-      case BlockType::Medial:
-        block_type = "MEDIAL";
-        break;
-      case BlockType::Final:
-        block_type = "FINAL";
-        break;
-      case BlockType::Formatted:
-        block_type = "FORMAT";
-        break;
-      case BlockType::Reserved:
-        block_type = "RESRVD";
-        break;
-      case BlockType::Deleted_Initial:
-      case BlockType::Deleted_Medial:
-      case BlockType::Deleted_Final:
-        block_type = "DELETED";
-        break;
-    }
-
-    std::string region;
-    switch(mem_card.getRegion(i))
-    {
-      case Region::American:
-        region = "US";
-        break;
-
-      case Region::European:
-        region = "EU";
-        break;
-
-      case Region::Japanese:
-        region = "JP";
-        break;
-    }
-
-    int col = 0;
-    mem_card_lv_->InsertItem(i, "");
-    mem_card_lv_->SetItem(i, col++, std::to_string(i));
-    mem_card_lv_->SetItem(i, col++, block_type);
-    mem_card_lv_->SetItem(i, col++, region);
-    mem_card_lv_->SetItem(i, col++, mem_card.getSaveTitle(i));
-    mem_card_lv_->SetItem(i, col++, mem_card.getProductCode(i));
-    mem_card_lv_->SetItem(i, col++, mem_card.getIdentifier(i));
-  }
+  mem_card_lv_->update(mem_card);
 }
 
 void MainFrame::OnAbout(wxCommandEvent &event)

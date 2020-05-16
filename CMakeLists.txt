@@ -19,7 +19,7 @@ add_subdirectory(libs/wxWidgets)
 
 include_directories(include)
 
-add_executable(kutacard src/mainapp.cpp src/mainframe.cpp src/memorycard.cpp src/savegame.cpp)
+add_executable(kutacard src/mainapp.cpp src/mainframe.cpp src/memorycard.cpp src/savegame.cpp src/memorycardlistview.cpp)
 set_target_properties(kutacard PROPERTIES
         OUTPUT_NAME ${MACOSX_BUNDLE_NAME}
         MACOSX_BUNDLE ON
