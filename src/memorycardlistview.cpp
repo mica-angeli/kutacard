@@ -121,8 +121,20 @@ void MemoryCardListView::OnContextMenu(wxContextMenuEvent& event)
 
 void MemoryCardListView::OnExportSave(wxCommandEvent &event)
 {
-  auto data = event.GetEventUserData();
-  std::cout << "Farts!" << getSelectedBlock() << std::endl;
+  wxFileDialog exportSaveGameDialog(this,
+                                    _("Export save game file"),
+                                    "",
+                                    "",
+                                    "Single save (*.mcs)|*.mcs",
+                                    wxFD_SAVE);
+
+  if (exportSaveGameDialog.ShowModal() != wxID_CANCEL)
+  {
+    const std::string path = exportSaveGameDialog.GetPath().ToStdString();
+    SaveGame save = mem_card->getSaveGame(getSelectedBlock());
+    save.save(path);
+  }
+
 }
 
 void MemoryCardListView::ShowContextMenu(const wxPoint& pos, long item)

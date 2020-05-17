@@ -5,6 +5,7 @@
 #include <wx/listctrl.h>
 #include <wx/wx.h>
 
+#include "savegame.h"
 #include "memorycard.h"
 
 namespace kutacard
@@ -31,6 +32,7 @@ private:
   using BlockType = ps1::Filesystem::BlockType;
   using Region = ps1::Filesystem::Region;
   using MemoryCard = ps1::MemoryCard;
+  using SaveGame = ps1::SaveGame;
 
   enum {
     COLUMN_BLOCK_NUM,
