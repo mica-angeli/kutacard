@@ -28,8 +28,21 @@ private:
   using BlockType = ps1::Filesystem::BlockType;
   using Region = ps1::Filesystem::Region;
 
+  enum {
+    COLUMN_BLOCK_NUM,
+    COLUMN_REGION,
+    COLUMN_TITLE,
+    COLUMN_PRODUCT_CODE,
+    COLUMN_IDENTIFIER,
+    COLUMN_SIZE
+  };
+
   static inline const std::unordered_map<Region, std::string> region_to_str = {
     {Region::American, "US"}, {Region::European, "EU"}, {Region::Japanese, "JP"}};
+  
+  void OnContextMenu(wxContextMenuEvent& event);
+
+  void ShowContextMenu(const wxPoint& pos, long item);
 };
 
 }

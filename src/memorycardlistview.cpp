@@ -24,6 +24,8 @@ MemoryCardListView::MemoryCardListView(wxWindow *parent,
   AppendColumn("Title");
   AppendColumn("Product Code");
   AppendColumn("Identifier");
+
+  Bind(wxEVT_CONTEXT_MENU, &MemoryCardListView::OnContextMenu, this);
 }
 
 
@@ -66,15 +68,60 @@ void MemoryCardListView::update(const ps1::MemoryCard& mem_card)
         break;
     }
 
-    int col = 0;
     InsertItem(item_i, "");
-    SetItem(item_i, col++, block_num);
-    SetItem(item_i, col++, region);
-    SetItem(item_i, col++, title);
-    SetItem(item_i, col++, product_code);
-    SetItem(item_i, col++, identifier);
+    SetItem(item_i, COLUMN_BLOCK_NUM, block_num);
+    SetItem(item_i, COLUMN_REGION, region);
+    SetItem(item_i, COLUMN_TITLE, title);
+    SetItem(item_i, COLUMN_PRODUCT_CODE, product_code);
+    SetItem(item_i, COLUMN_IDENTIFIER, identifier);
     item_i++;
   }
+
+  // Resize list columns
+  SetColumnWidth(COLUMN_BLOCK_NUM, wxLIST_AUTOSIZE_USEHEADER);
+  SetColumnWidth(COLUMN_REGION, wxLIST_AUTOSIZE_USEHEADER);
+  SetColumnWidth(COLUMN_TITLE, wxLIST_AUTOSIZE);
+  SetColumnWidth(COLUMN_PRODUCT_CODE, wxLIST_AUTOSIZE_USEHEADER);
+  SetColumnWidth(COLUMN_IDENTIFIER, wxLIST_AUTOSIZE_USEHEADER);
+}
+
+void MemoryCardListView::OnContextMenu(wxContextMenuEvent& event)
+{
+    if (GetEditControl() == NULL)
+    {
+        wxPoint point = event.GetPosition();
+        // If from keyboard
+        if ( (point.x == -1) && (point.y == -1) )
+        {
+            wxSize size = GetSize();
+            point.x = size.x / 2;
+            point.y = size.y / 2;
+        }
+        else
+        {
+            point = ScreenToClient(point);
+        }
+        int flags;
+        ShowContextMenu(point, HitTest(point, flags));
+    }
+    else
+    {
+        // the user is editing:
+        // allow the text control to display its context menu
+        // if it has one (it has on Windows) rather than display our one
+        event.Skip();
+    }
+}
+
+void MemoryCardListView::ShowContextMenu(const wxPoint& pos, long item)
+{
+    wxMenu menu;
+    menu.Append(wxID_ANY, wxString::Format("Menu for item %ld", item));
+    menu.Append(wxID_ABOUT, "&About");
+    menu.AppendSeparator();
+    menu.Append(wxID_EXIT, "E&xit");
+
+    PopupMenu(&menu, pos.x, pos.y);
 }
 
 }
