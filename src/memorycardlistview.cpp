@@ -122,16 +122,46 @@ void MemoryCardListView::OnContextMenu(wxContextMenuEvent& event)
 void MemoryCardListView::OnExportSave(wxCommandEvent &event)
 {
   auto data = event.GetEventUserData();
-  std::cout << "Farts!" << data << std::endl;
+  std::cout << "Farts!" << getSelectedBlock() << std::endl;
 }
 
 void MemoryCardListView::ShowContextMenu(const wxPoint& pos, long item)
 {
     wxMenu menu;
-    menu.Append(wxID_ANY, wxString::Format("Menu for item %ld", item));
-    menu.Append(1, "&Open");
+    menu.Append(ID_FormatBlock, "&Format block");
     menu.AppendSeparator();
-    menu.Append(wxID_EXIT, "E&xit");
+    menu.Append(ID_ExportSave, "&Export save...");
+    menu.Append(ID_ImportSave, "&Import save...");
+
+    const auto block_type = mem_card->getBlockType(getSelectedBlock(item));
+    switch(block_type)
+    {
+      case BlockType::Initial:
+        menu.Enable(ID_FormatBlock, true);
+        menu.Enable(ID_ExportSave, true);
+        menu.Enable(ID_ImportSave, false);
+        break;
+      case BlockType::Formatted:
+        menu.Enable(ID_FormatBlock, false);
+        menu.Enable(ID_ExportSave, false);
+        menu.Enable(ID_ImportSave, true);
+        break;
+      case BlockType::Identity:
+      case BlockType::Reserved:
+        menu.Enable(ID_FormatBlock, false);
+        menu.Enable(ID_ExportSave, false);
+        menu.Enable(ID_ImportSave, false);
+        break;
+      case BlockType::Medial:
+      case BlockType::Final:
+      case BlockType::Deleted_Initial:
+      case BlockType::Deleted_Medial:
+      case BlockType::Deleted_Final:
+        menu.Enable(ID_FormatBlock, true);
+        menu.Enable(ID_ExportSave, false);
+        menu.Enable(ID_ImportSave, false);
+        break;
+    }
 
     PopupMenu(&menu, pos.x, pos.y);
 }

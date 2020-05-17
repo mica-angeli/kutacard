@@ -42,11 +42,23 @@ private:
   };
 
   enum {
-    ID_ExportSave = 1
+    ID_FormatBlock = 1,
+    ID_ExportSave,
+    ID_ImportSave,
   };
 
   static inline const std::unordered_map<Region, std::string> region_to_str = {
     {Region::American, "USA"}, {Region::European, "EUR"}, {Region::Japanese, "JPN"}};
+  
+  inline int getSelectedBlock(long item) const
+  {
+    return item + 1;
+  }
+
+  inline int getSelectedBlock() const
+  {
+    return GetFirstSelected() + 1;
+  }
   
   void OnContextMenu(wxContextMenuEvent& event);
 
