@@ -17,7 +17,7 @@ MemoryCardListView::MemoryCardListView(wxWindow *parent,
                                        long style,
                                        const wxValidator& validator,
                                        const wxString &name) :
-  wxListView{parent, winid, pos, size, style, validator, name}
+  wxListView{parent, winid, pos, size, style | wxLC_SINGLE_SEL, validator, name}
 {
   AppendColumn("Block #");
   AppendColumn("Region");
@@ -26,15 +26,19 @@ MemoryCardListView::MemoryCardListView(wxWindow *parent,
   AppendColumn("Identifier");
 
   Bind(wxEVT_CONTEXT_MENU, &MemoryCardListView::OnContextMenu, this);
+  Bind(wxEVT_MENU, &MemoryCardListView::OnExportSave, this, ID_ExportSave);
 }
 
 
-void MemoryCardListView::update(const ps1::MemoryCard& mem_card)
+void MemoryCardListView::update()
 {
   DeleteAllItems();
 
+  if(!mem_card)
+    return;
+
   int item_i = 0;
-  for(int block = 1; block < mem_card.getBlocks(); block++)
+  for(int block = 1; block < mem_card->getBlocks(); block++)
   {
     const std::string block_num = std::to_string(block);
     std::string region;
@@ -42,13 +46,13 @@ void MemoryCardListView::update(const ps1::MemoryCard& mem_card)
     std::string product_code;
     std::string identifier;
 
-    switch(mem_card.getBlockType(block))
+    switch(mem_card->getBlockType(block))
     {
       case BlockType::Initial:
-        title = mem_card.getSaveTitle(block);
-        region = region_to_str.at(mem_card.getRegion(block));
-        product_code = mem_card.getProductCode(block);
-        identifier = mem_card.getIdentifier(block);
+        title = mem_card->getSaveTitle(block);
+        region = region_to_str.at(mem_card->getRegion(block));
+        product_code = mem_card->getProductCode(block);
+        identifier = mem_card->getIdentifier(block);
         break;
       case BlockType::Medial:
         title = "Linked block (middle)";
@@ -102,7 +106,9 @@ void MemoryCardListView::OnContextMenu(wxContextMenuEvent& event)
             point = ScreenToClient(point);
         }
         int flags;
-        ShowContextMenu(point, HitTest(point, flags));
+        const long item = HitTest(point, flags);
+        Select(item);
+        ShowContextMenu(point, item);
     }
     else
     {
@@ -113,15 +119,37 @@ void MemoryCardListView::OnContextMenu(wxContextMenuEvent& event)
     }
 }
 
+void MemoryCardListView::OnExportSave(wxCommandEvent &event)
+{
+  auto data = event.GetEventUserData();
+  std::cout << "Farts!" << data << std::endl;
+}
+
 void MemoryCardListView::ShowContextMenu(const wxPoint& pos, long item)
 {
     wxMenu menu;
     menu.Append(wxID_ANY, wxString::Format("Menu for item %ld", item));
-    menu.Append(wxID_ABOUT, "&About");
+    menu.Append(1, "&Open");
     menu.AppendSeparator();
     menu.Append(wxID_EXIT, "E&xit");
 
     PopupMenu(&menu, pos.x, pos.y);
+}
+
+void MemoryCardListView::openMemoryCard(const std::string &path)
+{
+  mem_card = std::make_unique<MemoryCard>(path);
+
+  if (!mem_card->checkData()) {
+    return;
+  }
+
+  std::ostringstream log_oss;
+  log_oss.imbue(std::locale(""));
+  log_oss << "Successfully loaded memory card of size " << std::fixed << mem_card->size() << " bytes";
+  wxLogMessage(wxString(log_oss.str()));
+
+  update();
 }
 
 }

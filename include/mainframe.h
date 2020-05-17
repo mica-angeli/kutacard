@@ -20,23 +20,16 @@ public:
 
 private:
   using MemoryCards = std::vector<ps1::MemoryCard>;
-  enum {
-    ID_Open = 1
-  };
 
   void OnOpen(wxCommandEvent &event);
 
   void OnAbout(wxCommandEvent &event);
 
-  void openMemoryCard(const std::string& path);
-
-  int current_card_;
-
-  MemoryCards cards_;
-
   std::unique_ptr<ps1::SaveGame> save_buffer_;
 
-  MemoryCardListView* mem_card_lv_;
+  MemoryCardListView* current_lv_;
+
+  std::vector<MemoryCardListView*> mem_card_lvs_;
 };
 
 }
