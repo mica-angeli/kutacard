@@ -122,8 +122,15 @@ void MemoryCardListView::OnContextMenu(wxContextMenuEvent& event)
 
 void MemoryCardListView::OnFormatBlock(wxCommandEvent& event)
 {
-  mem_card->formatBlock(getSelectedBlock());
-  update();
+  wxMessageDialog confirmation(this,
+                               "Are you sure you want to format these blocks?",
+                               "",
+                               wxOK | wxCANCEL | wxICON_EXCLAMATION);
+  if(confirmation.ShowModal() != wxID_CANCEL)
+  {
+    mem_card->formatBlock(getSelectedBlock());
+    update();
+  }
 }
 
 void MemoryCardListView::OnExportSave(wxCommandEvent& event)
