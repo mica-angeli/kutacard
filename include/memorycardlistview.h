@@ -28,6 +28,10 @@ public:
 
   void openMemoryCard(const std::string &path);
 
+  void saveMemoryCard(const std::string &path);
+
+  inline void saveMemoryCard() { saveMemoryCard(last_mem_card_path_); };
+
 private:
   using BlockType = ps1::Filesystem::BlockType;
   using Region = ps1::Filesystem::Region;
@@ -71,6 +75,8 @@ private:
   void ShowContextMenu(const wxPoint& pos, long item);
 
   std::unique_ptr<MemoryCard> mem_card;
+
+  std::string last_mem_card_path_;
 };
 
 }

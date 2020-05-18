@@ -195,6 +195,7 @@ void MemoryCardListView::ShowContextMenu(const wxPoint& pos, long item)
 
 void MemoryCardListView::openMemoryCard(const std::string& path)
 {
+  last_mem_card_path_ = path;
   mem_card = std::make_unique<MemoryCard>(path);
 
   if (!mem_card->checkData()) {
@@ -207,6 +208,17 @@ void MemoryCardListView::openMemoryCard(const std::string& path)
   wxLogMessage(wxString(log_oss.str()));
 
   update();
+}
+
+void MemoryCardListView::saveMemoryCard(const std::string &path)
+{
+  if(!mem_card)
+  {
+    return;
+  }
+
+  last_mem_card_path_ = path;
+  mem_card->save(path);
 }
 
 }

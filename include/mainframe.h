@@ -23,6 +23,10 @@ private:
 
   void OnOpen(wxCommandEvent &event);
 
+  void OnSave(wxCommandEvent &event);
+
+  void OnSaveAs(wxCommandEvent &event);
+
   void OnAbout(wxCommandEvent &event);
 
   std::unique_ptr<ps1::SaveGame> save_buffer_;
