@@ -22,6 +22,10 @@ public:
 
   int getBlocks() const override { return 1; };
 
+  inline std::string getFullName() const { return Filesystem::getFullName(0); };
+
+  inline std::string getSaveTitle() const { return Filesystem::getSaveTitle(1); };
+
 private:
   int getIndex(int block, int frame = 0, int byte = 0) const override
   {

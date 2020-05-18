@@ -65,6 +65,12 @@ public:
     return std::string(&*it);
   }
 
+  inline std::string getFullName(int block) const
+  {
+    auto it = std::next(data_.begin(), block * FRAME_SIZE + 10);
+    return std::string(&*it);
+  }
+
   std::string getSaveTitle(int block) const
   {
     auto title_it = std::next(data_.begin(), getIndex(block, 0, 4));
