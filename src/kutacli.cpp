@@ -117,7 +117,7 @@ bool save(const std::string& path)
   oss << std::setw(6) << region << " ";
   oss << std::setw(12) << savegame.getProductCode(0) << " ";
   oss << std::setw(10) << savegame.getIdentifier(0) << "  ";
-  oss << savegame.getSaveTitle(1);
+  oss << savegame.getSaveTitle();
 
   std::cout << oss.str() << std::endl;
 
