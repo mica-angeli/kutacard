@@ -30,6 +30,8 @@ public:
 
   void save(const std::string& path) const;
 
+  void formatBlock(int block);
+
 private:
   inline bool checkSize() const { return data_.size() == CARD_SIZE; };
 };

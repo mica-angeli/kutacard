@@ -64,7 +64,9 @@ private:
   
   void OnContextMenu(wxContextMenuEvent& event);
 
-  void OnExportSave(wxCommandEvent &event);
+  void OnFormatBlock(wxCommandEvent& event);
+
+  void OnExportSave(wxCommandEvent& event);
 
   void ShowContextMenu(const wxPoint& pos, long item);
 

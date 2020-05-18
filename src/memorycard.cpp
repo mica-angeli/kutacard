@@ -108,4 +108,40 @@ void MemoryCard::save(const std::string& path) const
   file.close();
 }
 
+void MemoryCard::formatBlock(int block)
+{
+  assert(block >= 1 && block <= 15);
+
+  auto block_type = getBlockType(block);
+
+  auto formatSingleBlock = [this](int block) {
+    // Format directory frame
+    auto frame_it = std::next(data_.begin(), block * FRAME_SIZE);
+    std::fill(frame_it, std::next(frame_it, FRAME_SIZE), 0);
+    setValue(frame_it, static_cast<uint32_t>(BlockType::Formatted));
+    auto next_block_it = std::next(frame_it, 8);
+    setValue(next_block_it, NEXT_BLOCK_NONE);
+
+    // Add checksum
+    auto checksum_it = std::next(frame_it, FRAME_SIZE - 1);
+    auto sum = checksum(frame_it, checksum_it);
+    setValue(checksum_it, sum);
+
+    // Format save block
+    auto block_it = std::next(data_.begin(), block * BLOCK_SIZE);
+    std::fill(block_it, std::next(block_it, BLOCK_SIZE), 0);
+  };
+
+  formatSingleBlock(block);
+
+  if(block_type == BlockType::Initial)
+  {
+    // Format remaining blocks in save file
+    for(block += 1; (getBlockType(block) == BlockType::Medial || getBlockType(block) == BlockType::Final) && block < NUM_BLOCKS; block++)
+    {
+      formatSingleBlock(block);
+    }
+  }
+}
+
 }

@@ -26,6 +26,7 @@ MemoryCardListView::MemoryCardListView(wxWindow *parent,
   AppendColumn("Identifier");
 
   Bind(wxEVT_CONTEXT_MENU, &MemoryCardListView::OnContextMenu, this);
+  Bind(wxEVT_MENU, &MemoryCardListView::OnFormatBlock, this, ID_FormatBlock);
   Bind(wxEVT_MENU, &MemoryCardListView::OnExportSave, this, ID_ExportSave);
 }
 
@@ -119,7 +120,13 @@ void MemoryCardListView::OnContextMenu(wxContextMenuEvent& event)
     }
 }
 
-void MemoryCardListView::OnExportSave(wxCommandEvent &event)
+void MemoryCardListView::OnFormatBlock(wxCommandEvent& event)
+{
+  mem_card->formatBlock(getSelectedBlock());
+  update();
+}
+
+void MemoryCardListView::OnExportSave(wxCommandEvent& event)
 {
   SaveGame save = mem_card->getSaveGame(getSelectedBlock());
 
@@ -159,14 +166,14 @@ void MemoryCardListView::ShowContextMenu(const wxPoint& pos, long item)
         menu.Enable(ID_ExportSave, false);
         menu.Enable(ID_ImportSave, true);
         break;
+      case BlockType::Medial:
+      case BlockType::Final:
       case BlockType::Identity:
       case BlockType::Reserved:
         menu.Enable(ID_FormatBlock, false);
         menu.Enable(ID_ExportSave, false);
         menu.Enable(ID_ImportSave, false);
         break;
-      case BlockType::Medial:
-      case BlockType::Final:
       case BlockType::Deleted_Initial:
       case BlockType::Deleted_Medial:
       case BlockType::Deleted_Final:
@@ -179,7 +186,7 @@ void MemoryCardListView::ShowContextMenu(const wxPoint& pos, long item)
     PopupMenu(&menu, pos.x, pos.y);
 }
 
-void MemoryCardListView::openMemoryCard(const std::string &path)
+void MemoryCardListView::openMemoryCard(const std::string& path)
 {
   mem_card = std::make_unique<MemoryCard>(path);
 
